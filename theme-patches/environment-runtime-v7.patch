@@ -1,0 +1,234 @@
+--- a/index.html
++++ b/index.html
+@@ -20,6 +20,7 @@
+       --text: #f5f7ff;
+       --muted: #a8afc3;
+       --shadow: 0 18px 60px rgba(0, 0, 0, .34);
++      --environment-color: #080a18;
+       --accent-contrast: #061018;
+       --overlay-bg: rgba(2, 4, 12, .66);
+       --option-bg: #11152a;
+@@ -76,6 +77,18 @@
+ 
+     input[type="range"] { accent-color: var(--accent); cursor: pointer; }
+ 
++    #environmentBackdrop {
++      position: fixed;
++      inset: 0;
++      z-index: 0;
++      background-color: var(--environment-color);
++      background-image: radial-gradient(circle at 32% 20%, #1b2050 0%, #0b0d1f 52%, #05060f 100%);
++      background-size: cover;
++      background-position: center;
++      transition: background-color .5s ease, opacity .35s ease;
++      pointer-events: none;
++    }
++
+     #stage {
+       position: fixed;
+       inset: 0;
+@@ -84,7 +97,7 @@
+       display: block;
+       touch-action: none;
+       cursor: grab;
+-      z-index: 0;
++      z-index: 1;
+     }
+ 
+     #stage.dragging { cursor: grabbing; }
+@@ -810,6 +823,7 @@
+   </style>
+ </head>
+ <body data-theme="nebula">
++  <div id="environmentBackdrop" aria-hidden="true"></div>
+   <canvas id="stage" aria-label="Interactive three-dimensional Rubik's Cube"></canvas>
+ 
+   <header id="header">
+@@ -2005,9 +2019,24 @@
+       return luminance > .57 ? '#081018' : '#ffffff';
+     }
+ 
++    function colorNumberToHex(value) {
++      return `#${Number(value).toString(16).padStart(6, '0')}`;
++    }
++
+     function applyThemeInterface(theme) {
+       const root = document.documentElement.style;
+       const light = theme.light;
++      const environmentColor = colorNumberToHex(theme.scene.fogColor);
++      const backdrop = $('#environmentBackdrop');
++
++      root.setProperty('--environment-color', environmentColor);
++      document.body.style.backgroundColor = environmentColor;
++      document.body.style.backgroundImage = theme.background;
++      if (backdrop) {
++        backdrop.style.backgroundColor = environmentColor;
++        backdrop.style.backgroundImage = theme.background;
++      }
++
+       root.setProperty('--accent', theme.accent);
+       root.setProperty('--accent-soft', rgba(theme.accent, light ? .14 : .19));
+       root.setProperty('--accent-glow', rgba(theme.accent, light ? .28 : .46));
+@@ -2023,9 +2052,17 @@
+       root.setProperty('--option-bg', light ? '#f4f6fa' : theme.surface);
+       root.setProperty('--option-text', light ? '#10172a' : '#ffffff');
+       root.style.colorScheme = light ? 'light' : 'dark';
+-      document.body.style.background = theme.background;
+-      document.querySelector('meta[name="theme-color"]').setAttribute('content', theme.surface);
++
++      const metaTheme = document.querySelector('meta[name="theme-color"]');
++      if (metaTheme) metaTheme.setAttribute('content', environmentColor);
+       themeSelect.title = `${theme.name} — ${theme.description}`;
++
++      try {
++        const attrs = renderer.getContext().getContextAttributes();
++        renderer.setClearColor(theme.scene.fogColor, attrs && attrs.alpha ? 0 : 1);
++      } catch (error) {
++        renderer.setClearColor(theme.scene.fogColor, 0);
++      }
+     }
+ 
+     let currentStarSpeed = .008;
+@@ -2038,34 +2075,68 @@
+       const target = theme.scene;
+       document.body.dataset.theme = theme.id;
+       themeSelect.value = theme.id;
+-      applyThemeInterface(theme);
+ 
+-      themeTween = {
+-        start: performance.now(),
+-        duration: immediate ? 1 : (reducedMotion ? 80 : 1000),
+-        from: {
+-          hemiSky: hemi.color.clone(),
+-          hemiGround: hemi.groundColor.clone(),
+-          hemiInt: hemi.intensity,
+-          keyColor: key.color.clone(),
+-          keyInt: key.intensity,
+-          rimColor: rim.color.clone(),
+-          rimInt: rim.intensity,
+-          amb: ambient.intensity,
+-          stars: starMaterial.opacity,
+-          starColor: starMaterial.color.clone(),
+-          starSize: starMaterial.size,
+-          starSpeed: currentStarSpeed,
+-          grid: getGridOpacity(),
+-          grid1: gridMaterials[0].color ? gridMaterials[0].color.clone() : new THREE.Color(target.grid1),
+-          grid2: (gridMaterials[1] || gridMaterials[0]).color ? (gridMaterials[1] || gridMaterials[0]).color.clone() : new THREE.Color(target.grid2),
+-          shadow: groundMaterial.opacity,
+-          shadowColor: groundMaterial.color ? groundMaterial.color.clone() : new THREE.Color(target.shadowColor),
+-          fogColor: scene.fog && scene.fog.color ? scene.fog.color.clone() : new THREE.Color(target.fogColor),
+-          fogDensity: scene.fog && Number.isFinite(scene.fog.density) ? scene.fog.density : target.fogDensity
+-        },
+-        to: target
+-      };
++      try {
++        applyThemeInterface(theme);
++      } catch (error) {
++        console.error('Environment backdrop styling failed', error);
++      }
++
++      try {
++        themeTween = {
++          start: performance.now(),
++          duration: immediate ? 1 : (reducedMotion ? 80 : 1000),
++          from: {
++            hemiSky: hemi.color.clone(),
++            hemiGround: hemi.groundColor.clone(),
++            hemiInt: hemi.intensity,
++            keyColor: key.color.clone(),
++            keyInt: key.intensity,
++            rimColor: rim.color.clone(),
++            rimInt: rim.intensity,
++            amb: ambient.intensity,
++            stars: starMaterial.opacity,
++            starColor: starMaterial.color.clone(),
++            starSize: starMaterial.size,
++            starSpeed: currentStarSpeed,
++            grid: getGridOpacity(),
++            grid1: gridMaterials[0] && gridMaterials[0].color ? gridMaterials[0].color.clone() : new THREE.Color(target.grid1),
++            grid2: (gridMaterials[1] || gridMaterials[0]) && (gridMaterials[1] || gridMaterials[0]).color ? (gridMaterials[1] || gridMaterials[0]).color.clone() : new THREE.Color(target.grid2),
++            shadow: groundMaterial.opacity,
++            shadowColor: groundMaterial.color ? groundMaterial.color.clone() : new THREE.Color(target.shadowColor),
++            fogColor: scene.fog && scene.fog.color ? scene.fog.color.clone() : new THREE.Color(target.fogColor),
++            fogDensity: scene.fog && Number.isFinite(scene.fog.density) ? scene.fog.density : target.fogDensity
++          },
++          to: target
++        };
++      } catch (error) {
++        console.error('Environment lighting transition could not start', error);
++        themeTween = null;
++        applyThemeSceneImmediately(target);
++      }
++    }
++
++    function applyThemeSceneImmediately(target) {
++      const safe = (fn) => { try { fn(); } catch (error) { console.error('Environment scene property skipped', error); } };
++      safe(() => hemi.color.setHex(target.hemiSky));
++      safe(() => hemi.groundColor.setHex(target.hemiGround));
++      safe(() => { hemi.intensity = target.hemiInt; });
++      safe(() => key.color.setHex(target.keyColor));
++      safe(() => { key.intensity = target.keyInt; });
++      safe(() => rim.color.setHex(target.rimColor));
++      safe(() => { rim.intensity = target.rimInt; });
++      safe(() => { ambient.intensity = target.amb; });
++      safe(() => { starMaterial.opacity = target.stars; });
++      safe(() => starMaterial.color.setHex(target.starColor));
++      safe(() => { starMaterial.size = target.starSize; });
++      safe(() => { currentStarSpeed = target.starSpeed; });
++      safe(() => setGridOpacity(target.grid));
++      safe(() => { if (gridMaterials[0] && gridMaterials[0].color) gridMaterials[0].color.setHex(target.grid1); });
++      safe(() => { const material = gridMaterials[1] || gridMaterials[0]; if (material && material.color) material.color.setHex(target.grid2); });
++      safe(() => { groundMaterial.opacity = target.shadow; });
++      safe(() => { if (groundMaterial.color) groundMaterial.color.setHex(target.shadowColor); });
++      safe(() => { if (scene.fog && scene.fog.color) scene.fog.color.setHex(target.fogColor); });
++      safe(() => { if (scene.fog) scene.fog.density = target.fogDensity; });
+     }
+ 
+     themeSelect.addEventListener('change', () => {
+@@ -2079,25 +2150,27 @@
+       const e = 1 - Math.pow(1 - p, 3);
+       const f = themeTween.from;
+       const t = themeTween.to;
+-      hemi.color.copy(f.hemiSky).lerp(new THREE.Color(t.hemiSky), e);
+-      hemi.groundColor.copy(f.hemiGround).lerp(new THREE.Color(t.hemiGround), e);
+-      hemi.intensity = THREE.MathUtils.lerp(f.hemiInt, t.hemiInt, e);
+-      key.color.copy(f.keyColor).lerp(new THREE.Color(t.keyColor), e);
+-      key.intensity = THREE.MathUtils.lerp(f.keyInt, t.keyInt, e);
+-      rim.color.copy(f.rimColor).lerp(new THREE.Color(t.rimColor), e);
+-      rim.intensity = THREE.MathUtils.lerp(f.rimInt, t.rimInt, e);
+-      ambient.intensity = THREE.MathUtils.lerp(f.amb, t.amb, e);
+-      starMaterial.opacity = THREE.MathUtils.lerp(f.stars, t.stars, e);
+-      starMaterial.color.copy(f.starColor).lerp(new THREE.Color(t.starColor), e);
+-      starMaterial.size = THREE.MathUtils.lerp(f.starSize, t.starSize, e);
+-      currentStarSpeed = THREE.MathUtils.lerp(f.starSpeed, t.starSpeed, e);
+-      setGridOpacity(THREE.MathUtils.lerp(f.grid, t.grid, e));
+-      if (gridMaterials[0].color) gridMaterials[0].color.copy(f.grid1).lerp(new THREE.Color(t.grid1), e);
+-      if ((gridMaterials[1] || gridMaterials[0]).color) (gridMaterials[1] || gridMaterials[0]).color.copy(f.grid2).lerp(new THREE.Color(t.grid2), e);
+-      groundMaterial.opacity = THREE.MathUtils.lerp(f.shadow, t.shadow, e);
+-      if (groundMaterial.color) groundMaterial.color.copy(f.shadowColor).lerp(new THREE.Color(t.shadowColor), e);
+-      if (scene.fog && scene.fog.color) scene.fog.color.copy(f.fogColor).lerp(new THREE.Color(t.fogColor), e);
+-      if (scene.fog) scene.fog.density = THREE.MathUtils.lerp(f.fogDensity, t.fogDensity, e);
++      const safe = (fn) => { try { fn(); } catch (error) { console.error('Environment transition property skipped', error); } };
++
++      safe(() => hemi.color.copy(f.hemiSky).lerp(new THREE.Color(t.hemiSky), e));
++      safe(() => hemi.groundColor.copy(f.hemiGround).lerp(new THREE.Color(t.hemiGround), e));
++      safe(() => { hemi.intensity = THREE.MathUtils.lerp(f.hemiInt, t.hemiInt, e); });
++      safe(() => key.color.copy(f.keyColor).lerp(new THREE.Color(t.keyColor), e));
++      safe(() => { key.intensity = THREE.MathUtils.lerp(f.keyInt, t.keyInt, e); });
++      safe(() => rim.color.copy(f.rimColor).lerp(new THREE.Color(t.rimColor), e));
++      safe(() => { rim.intensity = THREE.MathUtils.lerp(f.rimInt, t.rimInt, e); });
++      safe(() => { ambient.intensity = THREE.MathUtils.lerp(f.amb, t.amb, e); });
++      safe(() => { starMaterial.opacity = THREE.MathUtils.lerp(f.stars, t.stars, e); });
++      safe(() => starMaterial.color.copy(f.starColor).lerp(new THREE.Color(t.starColor), e));
++      safe(() => { starMaterial.size = THREE.MathUtils.lerp(f.starSize, t.starSize, e); });
++      safe(() => { currentStarSpeed = THREE.MathUtils.lerp(f.starSpeed, t.starSpeed, e); });
++      safe(() => setGridOpacity(THREE.MathUtils.lerp(f.grid, t.grid, e)));
++      safe(() => { if (gridMaterials[0] && gridMaterials[0].color) gridMaterials[0].color.copy(f.grid1).lerp(new THREE.Color(t.grid1), e); });
++      safe(() => { const material = gridMaterials[1] || gridMaterials[0]; if (material && material.color) material.color.copy(f.grid2).lerp(new THREE.Color(t.grid2), e); });
++      safe(() => { groundMaterial.opacity = THREE.MathUtils.lerp(f.shadow, t.shadow, e); });
++      safe(() => { if (groundMaterial.color) groundMaterial.color.copy(f.shadowColor).lerp(new THREE.Color(t.shadowColor), e); });
++      safe(() => { if (scene.fog && scene.fog.color) scene.fog.color.copy(f.fogColor).lerp(new THREE.Color(t.fogColor), e); });
++      safe(() => { if (scene.fog) scene.fog.density = THREE.MathUtils.lerp(f.fogDensity, t.fogDensity, e); });
+       if (p >= 1) themeTween = null;
+     }
+ 
