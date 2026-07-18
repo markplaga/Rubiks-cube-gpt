@@ -1,0 +1,33 @@
++        <li>Press <code>U</code>, <code>D</code>, <code>L</code>, <code>R</code>, <code>F</code>, or <code>B</code> for a clockwise turn; hold <strong>Shift</strong> for the prime version.</li>
++        <li>Keyboard moves are ignored while an input, slider, or dropdown has focus, so typing and control adjustments do not accidentally turn the cube.</li>
++        <li>All moves use one first-in, first-out queue. Manual turns, guide algorithms, Scramble, patterns, and AUTO SOLVE never overlap or interleave incorrectly.</li>
++        <li>The large glowing HUD near the top flashes the token currently turning and displays <strong>SOLVED</strong> when automatic solving finishes.</li>
++      </ul>
++
++      <h3>SCRAMBLE</h3>
++      <p><strong>SCRAMBLE</strong> queues 22 fast random face turns. The same face is never selected twice in a row, and each turn is randomly clockwise or counter-clockwise. Scramble clears an old pattern or solution sequence strip, but every completed scramble move remains known to the solver.</p>
++
++      <h3>SOLVE — automatic solution from any in-app state</h3>
++      <p><strong>SOLVE</strong> returns the cube to solved from every legal state produced inside CUBED: manual turns, keyboard moves, scrambles, tutorial algorithms, repeated or stacked patterns, middle-slice moves, whole-cube rotations, primes, and doubles.</p>
++      <ul class="help-compact">
++        <li>Unstarted queued moves and waiting patterns are canceled.</li>
++        <li>If a turn is already moving, it finishes and is included in the solution.</li>
++        <li>The button changes to <strong>SOLVING…</strong> and repeated SOLVE presses are ignored.</li>
++        <li>The sequence strip changes to <strong>AUTO SOLVE</strong>, highlights the current solution token, and marks finished tokens.</li>
++        <li>AUTO SOLVE uses its own fast move timing and ignores the Pattern Delay slider.</li>
++        <li>Manual face buttons, keyboard turns, Scramble, pattern selection, and guide Play buttons are temporarily ignored. Camera controls, Spin, themes, palettes, rail buttons, Help, Tech, and Reset remain available.</li>
++        <li>When finished, the move history is cleared, the button returns to SOLVE, and the HUD flashes <strong>SOLVED</strong>.</li>
++      </ul>
++      <p><strong>Solver scope:</strong> the solver is exact for every state created by this app because CUBED records completed legal moves. It does not read or solve the sticker state of a separate physical cube, photo, or externally edited cube because the app has no camera scan or sticker-state editor.</p>
++
++      <h3>RESET</h3>
++      <p><strong>RESET</strong> clears queued moves, waiting patterns, a pending or active automatic solution, and the recorded move history. If a turn is already in motion, that turn finishes safely before the 27 cubies are rebuilt in the solved arrangement. Reset clears the sequence strip and keeps the currently selected color palette.</p>
++
++      <h3>Pattern Gallery</h3>
++      <p>The gallery contains 25 decorative move sequences. Patterns are <strong>cumulative</strong>: each begins from the cube’s current state and does not reset first. If another move, algorithm, scramble, or pattern is active, a newly selected pattern waits until the queue drains. The dropdown returns to its placeholder immediately, allowing the same pattern to be selected repeatedly.</p>
++      <p>Selecting a valid pattern automatically hides the entire control deck for a cleaner presentation. Press <strong>CONTROLS</strong> to reveal it again at any point, including during playback.</p>
++      <details class="help-details">
++        <summary>Show all 25 pattern names</summary>
++        <p>Checkerboard · Six Spots · Crosses (4 Crosses) · Cube Inside a Cube · Cube in Cube in Cube · Four Centers · Broad Stripes / Pillars · Vertical Stripes · Horizontal Stripes · Checker Zigzag · Anaconda · Python · Black Mamba · Green Mamba · Union Jack · Superflip · Crosses on Every Face · Six T-Shapes · Plus-and-Minus · Christmas Tree / Gift Box · Flower Pattern · Twisted Peaks · Wire Pattern · Spiral Pattern · Opposite Corners.</p>
++      </details>
++
