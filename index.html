@@ -16,7 +16,7 @@
 <script>
 (() => {
   'use strict';
-  const version = 'self-contained-assets-20260718-3';
+  const version = 'environment-build-20260718-4';
   const status = document.getElementById('status');
   const retry = document.getElementById('retry');
   const patchFiles = Array.from({length: 7}, (_, i) => `theme-patches/index-0${i + 1}.part`);
@@ -71,28 +71,21 @@
   async function boot() {
     retry.style.display = 'none';
     status.textContent = 'Opening the 25 environments…';
-    let legacy = '';
     try {
       const result = await Promise.all([
         fetchText('legacy.html'),
         Promise.all(patchFiles.map(fetchText))
       ]);
-      legacy = result[0];
-      const completed = applyUnifiedPatch(legacy, result[1].join(''));
-      if (!completed.includes('id="themeSelect"') || !completed.includes('Prism Festival')) {
-        throw new Error('Environment verification failed');
+      const completed = applyUnifiedPatch(result[0], result[1].join(''));
+      const environmentCount = (completed.match(/id: '[^']+', name:/g) || []).length;
+      if (!completed.includes('id="themeSelect"') || !completed.includes('Prism Festival') || environmentCount !== 25) {
+        throw new Error(`Environment verification failed (${environmentCount}/25 found)`);
       }
       openApplication(completed);
     } catch (error) {
       console.error('CUBED environment startup failed', error);
-      try {
-        if (!legacy) legacy = await fetchText('legacy.html');
-        openApplication(legacy);
-      } catch (fallbackError) {
-        console.error('CUBED fallback startup failed', fallbackError);
-        status.textContent = 'CUBED could not start. Tap TRY AGAIN after a moment.';
-        retry.style.display = 'inline-block';
-      }
+      status.textContent = `The 25 environments could not start: ${error.message}. Tap TRY AGAIN after a moment.`;
+      retry.style.display = 'inline-block';
     }
   }
 
