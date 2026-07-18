@@ -460,16 +460,24 @@
       border-color: color-mix(in srgb, var(--accent) 40%, transparent);
     }
 
-    #patternSelect {
+    .deck-selects {
+      display: grid;
+      grid-template-columns: minmax(0, 1.18fr) minmax(0, .82fr);
+      gap: 8px;
+    }
+
+    .deck-select {
       width: 100%;
+      min-width: 0;
       min-height: 37px;
       padding: 0 34px 0 11px;
       font-family: "Chakra Petch", Arial, sans-serif;
       font-size: 12px;
       font-weight: 600;
+      text-overflow: ellipsis;
     }
 
-    body:not([data-theme="daylight"]) #patternSelect option { background: #11152a; color: #fff; }
+    body:not([data-theme="daylight"]) .deck-select option { background: #11152a; color: #fff; }
 
     .sliders {
       display: grid;
@@ -748,7 +756,7 @@
       .move-btn { min-height: 34px; font-size: 12px; padding: 4px; }
       .actions-section { gap: 5px; }
       .action-btn { min-height: 34px; font-size: 9px; }
-      #patternSelect { min-height: 34px; font-size: 11px; }
+      .deck-select { min-height: 34px; font-size: 11px; }
       .sliders { gap: 8px; }
       .slider-row { gap: 4px; }
       .slider-label, .slider-value { font-size: 9px; }
@@ -841,9 +849,12 @@
     </div>
     <div class="separator"></div>
     <div class="deck-section patterns-section">
-      <select id="patternSelect" aria-label="Pattern gallery">
-        <option value="">✦ Pattern gallery…</option>
-      </select>
+      <div class="deck-selects">
+        <select id="patternSelect" class="deck-select" aria-label="Pattern gallery">
+          <option value="">✦ Pattern gallery…</option>
+        </select>
+        <select id="paletteSelect" class="deck-select" aria-label="Cube color palette"></select>
+      </div>
       <div class="sliders">
         <label class="slider-row">
           <span class="slider-label">Delay</span>
@@ -875,7 +886,7 @@
       <h3>A cube made from 27 cubies</h3>
       <p>The puzzle is not a painted box. It is a 3×3×3 collection of 27 independent cube meshes, spaced slightly apart to create the familiar dark grid. Each cubie receives sticker materials only on faces that point outward in the solved state.</p>
       <h3>Runtime-painted sticker textures</h3>
-      <p>Every sticker is painted into a 256×256 canvas at runtime: a near-black surround, rounded colored inset, diagonal color shading, and a soft top sheen. Those canvases become Three.js textures, so the app needs no external image files.</p>
+      <p>Every sticker is painted into a 256×256 canvas at runtime: a near-black surround, rounded colored inset, diagonal color shading, and a soft top sheen. Those canvases become Three.js textures, so the app needs no external image files. Choosing a color palette repaints the six shared sticker textures in place, preserving every cubie’s current position and orientation.</p>
       <h3>Face turns, pivots, and exact snapping</h3>
       <p>For each move, the affected cubies are temporarily attached to an invisible pivot group at the cube center. Rotating that pivot turns a face, middle slice, or the whole cube as one rigid unit. When the animation ends, cubies return to the main group and both position and orientation are snapped to exact quarter-turn increments. Quaternion-based orientation is converted and rounded so floating-point drift never accumulates.</p>
       <h3>Animation and the move queue</h3>
@@ -909,6 +920,8 @@
       <h3>Pattern gallery</h3>
       <p>Choose any of 25 classic patterns. Patterns are cumulative: each one begins from the cube’s current state, and only Reset returns to solved. If another move or pattern is running, your selection waits until the queue completely drains. The sequence strip shows the pattern name and every move, highlighting the current and completed chips.</p>
       <p>The Delay slider inserts 0.25–5 seconds between pattern moves only. You can adjust it while a pattern is playing and the remaining pauses use the new value.</p>
+      <h3>Cube color palettes</h3>
+      <p>Use the Color palette dropdown beside the pattern gallery to recolor all six face slots. The standard colors and 20 alternate palettes can be applied at any time without resetting, unscrambling, or interrupting the cube’s current arrangement.</p>
       <h3>The eight-step guide</h3>
       <p>GUIDE opens the beginner tutorial. Back and Next move through the eight stages, and every algorithm block has a Play button that runs its notation on the live cube from its current state. The final button starts the guide over at step one.</p>
       <h3>Themes and rail</h3>
@@ -953,6 +966,32 @@
       ["Wire Pattern", "R L F B R L F B R L F B R2 B2 L2 R2 B2 L2"],
       ["Spiral Pattern", "L' B' D U R U' R' D2 R2 D L D' L' R' F U"],
       ["Opposite Corners", "R L U2 F2 D2 F2 R L F2 D2 B2 D2"]
+    ];
+
+    // Color order follows the source palette document:
+    // White slot (U), Yellow slot (D), Blue slot (B), Green slot (F), Red slot (R), Orange slot (L).
+    const cubePalettes = [
+      ["Standard Rubik's", ["#F6F7FB", "#FFD500", "#0057D8", "#00B74A", "#E0271B", "#FF7A00"]],
+      ["Neon Arcade", ["#00E5FF", "#FF2D95", "#B7FF00", "#7A00FF", "#FF6B00", "#F8F9FA"]],
+      ["Retro 1970s", ["#6B8E23", "#DDAA00", "#C6531C", "#007C7A", "#F4E4C1", "#5A3625"]],
+      ["Desert Sunset", ["#E9C46A", "#264653", "#E76F51", "#8AB17D", "#C85A3D", "#9C89B8"]],
+      ["Ocean Reef", ["#66CDAA", "#173F5F", "#FF6F61", "#00A6A6", "#F9C74F", "#F8F4E3"]],
+      ["Pastel Candy", ["#A8E6CF", "#CDB4DB", "#FFC8A2", "#A2D2FF", "#FFF3A3", "#FFAFCC"]],
+      ["Gothic Jewel", ["#007F5F", "#A4161A", "#0B4F8A", "#5A189A", "#D4A017", "#F1E9DA"]],
+      ["Earth & Clay", ["#C28B36", "#A44A3F", "#667A3E", "#4F5D75", "#E8DDCB", "#2B2D42"]],
+      ["Bauhaus", ["#D7263D", "#0057B8", "#F5C400", "#111111", "#F5F5F5", "#8D99AE"]],
+      ["Nordic Winter", ["#D8F3FF", "#3A6EA5", "#2D6A4F", "#9D174D", "#FAFAFA", "#7D8597"]],
+      ["Japanese Garden", ["#7A9E45", "#E8A0BF", "#264653", "#E76F51", "#F6F0E2", "#C9B458"]],
+      ["Miami Vice", ["#00F5D4", "#F15BB5", "#9B5DE5", "#FEE440", "#00BBF9", "#14213D"]],
+      ["Forest Mushroom", ["#4F772D", "#B08968", "#BC6C25", "#FEFAE0", "#6D597A", "#283618"]],
+      ["Ice Cream Shop", ["#F28482", "#84A98C", "#F6E8C3", "#577590", "#F6BD60", "#9D4EDD"]],
+      ["Cyberpunk", ["#00D9FF", "#FF00A8", "#39FF14", "#6F00FF", "#FFB000", "#0A0A0A"]],
+      ["Autumn Leaves", ["#B23A48", "#E76F00", "#D4A017", "#6B7D3A", "#6D214F", "#F2E8CF"]],
+      ["Southwestern Tile", ["#2A9D8F", "#1D4E89", "#C65D3B", "#E9B44C", "#D9A066", "#F4F1DE"]],
+      ["Galaxy", ["#E056FD", "#6C5CE7", "#0984E3", "#00CEC9", "#FDCB6E", "#2D3436"]],
+      ["Color-Vision Friendly", ["#E69F00", "#56B4E9", "#009E73", "#F0E442", "#D55E00", "#CC79A7"]],
+      ["ColorBrewer Set2", ["#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F"]],
+      ["Mineral Spectrum", ["#343A40", "#F8F9FA", "#B87333", "#0B8F6A", "#3454D1", "#7B2CBF"]]
     ];
 
     const steps = [
@@ -1045,6 +1084,16 @@
       opt.textContent = `${i + 1}. ${name}`;
       patternSelect.appendChild(opt);
     });
+
+    const paletteSelect = $('#paletteSelect');
+    cubePalettes.forEach(([name, colors], i) => {
+      const opt = document.createElement('option');
+      opt.value = String(i);
+      opt.textContent = i === 0 ? `◆ ${name}` : `${i}. ${name}`;
+      opt.title = colors.join(' · ');
+      paletteSelect.appendChild(opt);
+    });
+    paletteSelect.title = `${cubePalettes[0][0]}: ${cubePalettes[0][1].join(' · ')}`;
 
     let currentStep = 0;
     function renderStep() {
@@ -1244,6 +1293,27 @@
       }
     }
     buildCube();
+
+    const paletteFaceOrder = ['U', 'D', 'B', 'F', 'R', 'L'];
+    function applyCubePalette(index) {
+      const palette = cubePalettes[index];
+      if (!palette) return;
+      const [name, colors] = palette;
+      paletteFaceOrder.forEach((face, colorIndex) => {
+        const material = stickerMaterials[face];
+        const previousMap = material.map;
+        stickerColors[face] = new THREE.Color(colors[colorIndex]).getHex();
+        material.map = makeStickerTexture(colors[colorIndex]);
+        material.needsUpdate = true;
+        if (previousMap) previousMap.dispose();
+      });
+      paletteSelect.title = `${name}: ${colors.join(' · ')}`;
+    }
+
+    paletteSelect.addEventListener('change', () => {
+      applyCubePalette(Number(paletteSelect.value));
+      paletteSelect.blur();
+    });
 
     const moveTable = {
       U: ['y', 1, -1],
