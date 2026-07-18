@@ -1,0 +1,28 @@
+name: Clean comprehensive Help update files
+
+on:
+  push:
+    paths:
+      - .github/workflows/cleanup-comprehensive-help.yml
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Remove temporary update files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -f .github/workflows/apply-comprehensive-help.yml
+          git rm -f .github/workflows/cleanup-comprehensive-help.yml
+          git rm -f .github/patches/help.part1 .github/patches/help.part2 .github/patches/help.part3 .github/patches/help.part4 .github/patches/help.part5 .github/patches/help.part6
+          git rm -f .github/patches/comprehensive-help.ready
+          git commit -m "Remove temporary Help update files"
+          git push origin HEAD:main
