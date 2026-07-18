@@ -1,0 +1,42 @@
+-      <p><strong>TECH</strong> opens an explanation of how the app is built. <strong>HELP</strong> opens this guide. Only one overlay can be open at a time. Close an overlay with its ✕, by tapping its dimmed backdrop, by pressing its rail button again, or with Escape.</p>
+-
+-      <h3>Phones, tablets, and reduced motion</h3>
+-      <p>On smaller screens the guide becomes a bottom sheet, the controls wrap into a compact deck, the rail moves to the top, and touch orbit and pinch zoom remain available. The renderer continually checks the visible canvas size so the cube stays centered across orientation changes and in-app browsers. When your device requests reduced motion, cube turns and theme transitions run much faster.</p>
++      <ul class="help-compact">
++        <li><strong>GUIDE:</strong> show or hide the eight-step lesson panel.</li>
++        <li><strong>CONTROLS:</strong> show or hide the full move deck. Hide both GUIDE and CONTROLS for an uncluttered full-screen cube.</li>
++        <li><strong>TECH:</strong> open the technical explanation of the rendering, cubies, textures, move engine, solver, lighting, and hosting.</li>
++        <li><strong>HELP:</strong> open this complete feature guide.</li>
++        <li>Lit rail buttons indicate which panel or overlay is currently active.</li>
++      </ul>
++
++      <h3>Closing overlays and Escape</h3>
++      <p>Only one of TECH or HELP can be open at a time. Close an overlay with its ✕, by tapping or clicking the dimmed backdrop, by pressing the same rail button again, or by pressing <strong>Escape</strong>. When no overlay is open, Escape toggles GUIDE.</p>
++
++      <h3>Phones, tablets, orientation, and in-app browsers</h3>
++      <p>At smaller widths, GUIDE becomes a bottom sheet, the rail becomes a compact row near the top, the deck wraps with Pattern and Palette controls first, action buttons stack, move buttons shrink, and the desktop hint disappears. Touch orbit and pinch zoom remain available. The renderer rechecks the actual visible canvas every frame and on resize, orientation change, and visual-viewport changes so the cube stays centered on high-DPI phones and inside in-app browsers.</p>
++
++      <h3>Reduced motion, focus, and page reloads</h3>
++      <p>If the device requests reduced motion, cube turns and theme transitions become much faster, interface transitions shorten, and sequence-chip scrolling stops using smooth animation. Buttons, selects, and sliders have visible focus states for keyboard use.</p>
++      <p>CUBED intentionally uses no local or session storage. Reloading the page restores the solved cube, Standard Rubik’s palette, Nebula theme, default Delay and Spin values, step one of GUIDE, and the default panel visibility.</p>
+     </article>
+   </div>
+ 
+--- a/SPEC.md
++++ b/SPEC.md
+@@ -247,17 +247,19 @@
+ - GUIDE toggles tutorial; panel ✕ hides it; preserve step and cube.
+ - CONTROLS toggles deck; hidden sequence moves down; hide GUIDE and CONTROLS for clean view.
+ - TECH explains Three.js/WebGL, camera, cubies, runtime textures, live palette replacement, pivot turns, snapping, animation, queue, reversible move ledger and SOLVE engine, lights, shadows, stars, grid, themes, CSS/UI, fonts, input, and GitHub Pages hosting.
+-- HELP must document every current capability, including:
+-  - orbit, wheel, pinch, spin direction/off/drag pause;
+-  - buttons, notation, slices, rotations, queue, HUD, keyboard;
+-  - Scramble, SOLVE, and Reset, including solution cancellation rules, AUTO SOLVE sequence display, waiting-pattern clearing, history clearing, and palette retention;
+-  - all 25 cumulative patterns, waiting, repeat selection, automatic control hiding, sequence states/persistence, Delay;
+-  - Standard plus 20 palettes, live recoloring, state preservation, Reset persistence, reload to standard;
+-  - eight guide steps, ticks, navigation, Play, close behavior;
+-  - four themes;
+-  - all rail actions and clean view;
+-  - all overlay close methods;
+-  - mobile, orientation, in-app browser, and reduced-motion behavior.
++- HELP must be a complete, scrollable user manual and document every current capability, including:
