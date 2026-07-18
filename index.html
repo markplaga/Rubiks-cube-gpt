@@ -907,25 +907,44 @@
       <div class="sheet-top">
         <div>
           <div class="eyebrow">How to use CUBED</div>
-          <h2 id="helpTitle">Explore, turn, learn</h2>
+          <h2 id="helpTitle">Every control, from first turn to finished pattern</h2>
         </div>
         <button class="icon-btn overlay-close" aria-label="Close help">✕</button>
       </div>
-      <h3>Orbit, zoom, and spin</h3>
-      <p>Drag anywhere on the cube stage to orbit. Use a mouse wheel to zoom, or pinch with two fingers on touchscreens. The Spin slider adds automatic orbit: negative values turn counter-clockwise, positive values turn clockwise, and zero turns it off. Auto-spin pauses while you drag and continues during cube moves.</p>
-      <h3>Move buttons and notation</h3>
-      <p>The twelve buttons perform clockwise and counter-clockwise turns of the six faces: <code>U D L R F B</code>. A prime mark (<code>'</code>) means counter-clockwise when you face that side, and <code>2</code> means a half turn. The engine also understands middle slices <code>M E S</code> and whole-cube rotations <code>x y z</code>. On a keyboard, press U, D, L, R, F, or B; hold Shift for a prime turn.</p>
-      <h3>Scramble and reset</h3>
-      <p>Scramble adds 22 fast random face turns without repeating the same face twice in a row. Reset clears queued moves, waits for a move already in flight to finish, rebuilds a perfectly solved cube, and clears the pattern strip.</p>
-      <h3>Pattern gallery</h3>
-      <p>Choose any of 25 classic patterns. Patterns are cumulative: each one begins from the cube’s current state, and only Reset returns to solved. If another move or pattern is running, your selection waits until the queue completely drains. The sequence strip shows the pattern name and every move, highlighting the current and completed chips.</p>
-      <p>The Delay slider inserts 0.25–5 seconds between pattern moves only. You can adjust it while a pattern is playing and the remaining pauses use the new value.</p>
+
+      <h3>Orbit, zoom, and automatic spin</h3>
+      <p>Drag anywhere on the cube stage to orbit around the puzzle. Use a mouse wheel to zoom, or pinch with two fingers on a touchscreen. The <strong>Spin</strong> slider continuously orbits the camera: negative values rotate counter-clockwise, positive values rotate clockwise, and <code>0</code> turns spin off. Auto-spin pauses while you are dragging and continues during turns, algorithms, scrambles, and pattern playback.</p>
+
+      <h3>Face-turn buttons and notation</h3>
+      <p>The twelve move buttons turn the six faces clockwise or counter-clockwise: <code>U D L R F B</code>. Read a plain letter as clockwise while looking directly at that face. A prime mark (<code>'</code>) means counter-clockwise, and <code>2</code> means one smooth 180-degree half turn. The move engine also supports middle slices <code>M E S</code> and whole-cube rotations <code>x y z</code> when they appear in algorithms and patterns.</p>
+      <p>Every move passes through one queue, so button presses, keyboard turns, guide algorithms, scrambles, and patterns play in order without overlapping. The large move HUD at the top flashes the token currently being performed.</p>
+
+      <h3>Keyboard shortcuts</h3>
+      <p>Press <code>U</code>, <code>D</code>, <code>L</code>, <code>R</code>, <code>F</code>, or <code>B</code> for a clockwise face turn; hold <strong>Shift</strong> for the prime version. Press <strong>Escape</strong> to close an open TECH or HELP overlay. When no overlay is open, Escape toggles the solving guide.</p>
+
+      <h3>Scramble and Reset</h3>
+      <p><strong>SCRAMBLE</strong> performs 22 fast random face turns and never chooses the same face twice in succession. It also clears the visible pattern sequence strip. <strong>RESET</strong> clears queued moves and waiting patterns, lets any turn already in motion finish safely, rebuilds a perfectly solved cube, and clears the sequence strip. Reset keeps your currently selected color palette.</p>
+
+      <h3>Pattern gallery and sequence playback</h3>
+      <p>The Pattern Gallery contains 25 classic decorative patterns. A selected pattern begins from the cube’s <em>current</em> state—patterns are deliberately cumulative, and RESET is the only automatic return to solved. Selecting a pattern immediately hides the control deck for a cleaner view; use the <strong>CONTROLS</strong> rail button to reveal it again.</p>
+      <p>If a turn, algorithm, scramble, or earlier pattern is still running, the new pattern waits until the queue is completely empty. The dropdown returns to its placeholder after every selection, so the same pattern can be chosen repeatedly. The sequence strip displays the pattern name and every token: the current token is highlighted, finished tokens remain tinted, and upcoming tokens stay muted. The strip remains visible until the next Scramble or Reset.</p>
+      <p>The <strong>Delay</strong> slider adds a pause of 0.25–5 seconds after each pattern move except the last. It affects patterns only—not manual turns, the guide, or Scramble—and it is read live, so changing it during playback alters the remaining pauses.</p>
+
       <h3>Cube color palettes</h3>
-      <p>Use the Color palette dropdown beside the pattern gallery to recolor all six face slots. The standard colors and 20 alternate palettes can be applied at any time without resetting, unscrambling, or interrupting the cube’s current arrangement.</p>
-      <h3>The eight-step guide</h3>
-      <p>GUIDE opens the beginner tutorial. Back and Next move through the eight stages, and every algorithm block has a Play button that runs its notation on the live cube from its current state. The final button starts the guide over at step one.</p>
-      <h3>Themes and rail</h3>
-      <p>Nebula, Synthwave, Daylight, and Ember change both the interface accent and the complete 3D lighting environment. GUIDE toggles the lesson panel, CONTROLS hides or reveals the deck, and TECH and HELP open these overlays. Press Escape to close an overlay; when no overlay is open, Escape toggles the guide.</p>
+      <p>The Color Palette dropdown includes the standard Rubik’s scheme plus 20 alternate named palettes. A palette remaps the six color slots—white, yellow, blue, green, red, and orange—across the entire live cube. You can recolor a solved cube, a scramble, a finished pattern, or a cube in motion without changing any cubie’s position or orientation. The chosen palette remains active when RESET is used, but a full page reload returns to the standard palette.</p>
+
+      <h3>The eight-step beginner guide</h3>
+      <p><strong>GUIDE</strong> opens the beginner-solving panel. The header shows the current step and eight progress ticks. Use <strong>Back</strong> and <strong>Next</strong> to move through the lessons; on step eight, <strong>Start over</strong> returns to step one. Every notation block has a <strong>▶ Play</strong> button that queues that exact algorithm on the cube from its current state. The panel’s ✕ or the GUIDE rail button hides the guide without changing your cube or lesson position.</p>
+
+      <h3>Themes</h3>
+      <p>The top theme pills switch among <strong>Nebula</strong>, <strong>Synthwave</strong>, <strong>Daylight</strong>, and <strong>Ember</strong>. Each theme changes the page background, interface accent, glass panels, scene lighting, rim color, stars, ground shadow, and—where appropriate—the Synthwave grid. Daylight also changes the interface to light glass with dark text. Scene changes blend smoothly rather than switching abruptly.</p>
+
+      <h3>Rail buttons and clean-view mode</h3>
+      <p><strong>GUIDE</strong> shows or hides the tutorial panel. <strong>CONTROLS</strong> shows or hides the entire move deck; when the deck is hidden, a visible pattern sequence drops toward the bottom edge. Hide both GUIDE and CONTROLS for an uncluttered full-screen cube. Lit rail buttons indicate which panel or overlay is active.</p>
+      <p><strong>TECH</strong> opens an explanation of how the app is built. <strong>HELP</strong> opens this guide. Only one overlay can be open at a time. Close an overlay with its ✕, by tapping its dimmed backdrop, by pressing its rail button again, or with Escape.</p>
+
+      <h3>Phones, tablets, and reduced motion</h3>
+      <p>On smaller screens the guide becomes a bottom sheet, the controls wrap into a compact deck, the rail moves to the top, and touch orbit and pinch zoom remain available. The renderer continually checks the visible canvas size so the cube stays centered across orientation changes and in-app browsers. When your device requests reduced motion, cube turns and theme transitions run much faster.</p>
     </article>
   </div>
 
