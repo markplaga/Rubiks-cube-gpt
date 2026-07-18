@@ -13,12 +13,12 @@
 +          starSpeed: currentStarSpeed,
            grid: getGridOpacity(),
 -          shadow: groundMaterial.opacity
-+          grid1: gridMaterials[0].color.clone(),
-+          grid2: (gridMaterials[1] || gridMaterials[0]).color.clone(),
++          grid1: gridMaterials[0].color ? gridMaterials[0].color.clone() : new THREE.Color(target.grid1),
++          grid2: (gridMaterials[1] || gridMaterials[0]).color ? (gridMaterials[1] || gridMaterials[0]).color.clone() : new THREE.Color(target.grid2),
 +          shadow: groundMaterial.opacity,
-+          shadowColor: groundMaterial.color.clone(),
-+          fogColor: scene.fog.color.clone(),
-+          fogDensity: scene.fog.density
++          shadowColor: groundMaterial.color ? groundMaterial.color.clone() : new THREE.Color(target.shadowColor),
++          fogColor: scene.fog && scene.fog.color ? scene.fog.color.clone() : new THREE.Color(target.fogColor),
++          fogDensity: scene.fog && Number.isFinite(scene.fog.density) ? scene.fog.density : target.fogDensity
          },
 -        to: themeTargets[name]
 +        to: target
@@ -41,12 +41,12 @@
 +      starMaterial.size = THREE.MathUtils.lerp(f.starSize, t.starSize, e);
 +      currentStarSpeed = THREE.MathUtils.lerp(f.starSpeed, t.starSpeed, e);
        setGridOpacity(THREE.MathUtils.lerp(f.grid, t.grid, e));
-+      gridMaterials[0].color.copy(f.grid1).lerp(new THREE.Color(t.grid1), e);
-+      (gridMaterials[1] || gridMaterials[0]).color.copy(f.grid2).lerp(new THREE.Color(t.grid2), e);
++      if (gridMaterials[0].color) gridMaterials[0].color.copy(f.grid1).lerp(new THREE.Color(t.grid1), e);
++      if ((gridMaterials[1] || gridMaterials[0]).color) (gridMaterials[1] || gridMaterials[0]).color.copy(f.grid2).lerp(new THREE.Color(t.grid2), e);
        groundMaterial.opacity = THREE.MathUtils.lerp(f.shadow, t.shadow, e);
-+      groundMaterial.color.copy(f.shadowColor).lerp(new THREE.Color(t.shadowColor), e);
-+      scene.fog.color.copy(f.fogColor).lerp(new THREE.Color(t.fogColor), e);
-+      scene.fog.density = THREE.MathUtils.lerp(f.fogDensity, t.fogDensity, e);
++      if (groundMaterial.color) groundMaterial.color.copy(f.shadowColor).lerp(new THREE.Color(t.shadowColor), e);
++      if (scene.fog && scene.fog.color) scene.fog.color.copy(f.fogColor).lerp(new THREE.Color(t.fogColor), e);
++      if (scene.fog) scene.fog.density = THREE.MathUtils.lerp(f.fogDensity, t.fogDensity, e);
        if (p >= 1) themeTween = null;
      }
  
@@ -56,10 +56,11 @@
  
 -      stars.rotation.y += dt * 0.008;
 +      stars.rotation.y += dt * currentStarSpeed;
-       updateThemeTween(now);
+-      updateThemeTween(now);
++      try { updateThemeTween(now); } catch (error) { console.error('Environment transition disabled; cube rendering continues.', error); themeTween = null; }
        renderer.render(scene, camera);
      }
-+    setTheme('nebula', true);
      resizeRendererToDisplaySize();
      requestAnimationFrame(render);
++    try { setTheme('nebula', true); } catch (error) { console.error('Environment styling failed; cube rendering continues.', error); themeTween = null; }
    })();
