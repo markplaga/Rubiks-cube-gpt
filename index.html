@@ -411,7 +411,7 @@
       bottom: max(16px, env(safe-area-inset-bottom));
       transform: translateX(-50%);
       min-height: 128px;
-      width: min(860px, calc(100vw - 40px));
+      width: min(940px, calc(100vw - 40px));
       padding: 14px;
       border-radius: 18px;
       display: flex;
@@ -428,7 +428,7 @@
 
     .deck-section { min-width: 0; }
     .moves-section { flex: 0 1 330px; display: grid; align-content: center; }
-    .actions-section { flex: 0 0 150px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-content: center; }
+    .actions-section { flex: 0 0 220px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; align-content: center; }
     .patterns-section { flex: 1 1 320px; display: grid; align-content: center; gap: 10px; }
     .separator { width: 1px; background: var(--border); }
 
@@ -459,6 +459,16 @@
       color: var(--accent);
       border-color: color-mix(in srgb, var(--accent) 40%, transparent);
     }
+
+    .action-btn.solve {
+      color: #061018;
+      background: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 0 20px color-mix(in srgb, var(--accent-glow) 42%, transparent);
+    }
+
+    body[data-theme="daylight"] .action-btn.solve { color: #fff; }
+    .action-btn.solve:disabled { cursor: progress; opacity: .78; }
 
     .deck-selects {
       display: grid;
@@ -751,7 +761,7 @@
       .separator { display: none; }
       .patterns-section { order: 1; flex: 1 0 100%; gap: 7px; }
       .moves-section { order: 2; flex: 1 1 calc(100% - 126px); }
-      .actions-section { order: 3; flex: 0 0 116px; }
+      .actions-section { order: 3; flex: 0 0 116px; grid-template-columns: 1fr; }
       .moves-grid { grid-template-columns: repeat(6, minmax(32px, 1fr)); gap: 5px; }
       .move-btn { min-height: 34px; font-size: 12px; padding: 4px; }
       .actions-section { gap: 5px; }
@@ -845,6 +855,7 @@
     <div class="separator"></div>
     <div class="deck-section actions-section">
       <button id="scrambleBtn" class="action-btn scramble">SCRAMBLE</button>
+      <button id="solveBtn" class="action-btn solve">SOLVE</button>
       <button id="resetBtn" class="action-btn">RESET</button>
     </div>
     <div class="separator"></div>
@@ -890,7 +901,9 @@
       <h3>Face turns, pivots, and exact snapping</h3>
       <p>For each move, the affected cubies are temporarily attached to an invisible pivot group at the cube center. Rotating that pivot turns a face, middle slice, or the whole cube as one rigid unit. When the animation ends, cubies return to the main group and both position and orientation are snapped to exact quarter-turn increments. Quaternion-based orientation is converted and rounded so floating-point drift never accumulates.</p>
       <h3>Animation and the move queue</h3>
-      <p><code>requestAnimationFrame</code> drives every turn with an ease-out cubic curve. A FIFO move queue guarantees that buttons, keyboard moves, guide algorithms, scrambles, and patterns never overlap. Half turns are one smooth 180-degree movement rather than two visible quarter-turn snaps.</p>
+      <p><code>requestAnimationFrame</code> drives every turn with an ease-out cubic curve. A FIFO move queue guarantees that buttons, keyboard moves, guide algorithms, scrambles, patterns, and automatic solutions never overlap. Half turns are one smooth 180-degree movement rather than two visible quarter-turn snaps.</p>
+      <h3>Always-available solution engine</h3>
+      <p>Every completed face, slice, and whole-cube turn is recorded in a reversible move ledger. SOLVE cancels unplayed queued work, safely lets a turn already in motion finish, inverts the completed move history, simplifies adjacent turns, and animates the exact return path to the solved state. Because every state in CUBED is produced by legal moves through this engine, the inverse sequence is an exact solver for any state the app can create.</p>
       <h3>Lighting and atmosphere</h3>
       <p>A hemisphere light, key directional light, colored rim light, and low ambient light reveal the cube’s form. The key light uses PCF soft shadow mapping. A points-based starfield slowly rotates behind the scene, a shadow plane catches the cube’s soft silhouette, and the Synthwave theme fades in a large perspective grid.</p>
       <h3>Smooth theme interpolation</h3>
@@ -907,7 +920,7 @@
       <div class="sheet-top">
         <div>
           <div class="eyebrow">How to use CUBED</div>
-          <h2 id="helpTitle">Every control, from first turn to finished pattern</h2>
+          <h2 id="helpTitle">Every control, from first turn to solved cube</h2>
         </div>
         <button class="icon-btn overlay-close" aria-label="Close help">✕</button>
       </div>
@@ -922,8 +935,10 @@
       <h3>Keyboard shortcuts</h3>
       <p>Press <code>U</code>, <code>D</code>, <code>L</code>, <code>R</code>, <code>F</code>, or <code>B</code> for a clockwise face turn; hold <strong>Shift</strong> for the prime version. Press <strong>Escape</strong> to close an open TECH or HELP overlay. When no overlay is open, Escape toggles the solving guide.</p>
 
-      <h3>Scramble and Reset</h3>
-      <p><strong>SCRAMBLE</strong> performs 22 fast random face turns and never chooses the same face twice in succession. It also clears the visible pattern sequence strip. <strong>RESET</strong> clears queued moves and waiting patterns, lets any turn already in motion finish safely, rebuilds a perfectly solved cube, and clears the sequence strip. Reset keeps your currently selected color palette.</p>
+      <h3>Scramble, Solve, and Reset</h3>
+      <p><strong>SCRAMBLE</strong> performs 22 fast random face turns and never chooses the same face twice in succession. It also clears the visible pattern sequence strip.</p>
+      <p><strong>SOLVE</strong> works from any state created in CUBED—including manual turns, scrambles, guide algorithms, stacked patterns, slice moves, and whole-cube rotations. It cancels moves and patterns that have not yet begun, allows a turn already in motion to finish safely, then animates the exact inverse sequence back to solved. The solution appears in the sequence strip as <strong>AUTO SOLVE</strong>. Manual turns, Scramble, patterns, and guide Play buttons are temporarily ignored while solving; RESET can stop the process immediately.</p>
+      <p><strong>RESET</strong> clears queued moves, waiting patterns, and solution history; lets any turn already in motion finish safely; rebuilds a perfectly solved cube; and clears the sequence strip. Reset keeps your currently selected color palette.</p>
 
       <h3>Pattern gallery and sequence playback</h3>
       <p>The Pattern Gallery contains 25 classic decorative patterns. A selected pattern begins from the cube’s <em>current</em> state—patterns are deliberately cumulative, and RESET is the only automatic return to solved. Selecting a pattern immediately hides the control deck for a cleaner view; use the <strong>CONTROLS</strong> rail button to reveal it again.</p>
@@ -1135,7 +1150,7 @@
     });
     $('#panelBody').addEventListener('click', (e) => {
       const btn = e.target.closest('.play-algo');
-      if (!btn) return;
+      if (!btn || solving || solveRequested) return;
       enqueueSequence(btn.dataset.seq, reducedMotion ? 80 : 260);
     });
 
@@ -1351,13 +1366,93 @@
 
     const moveQueue = [];
     const pendingPatterns = [];
+    const moveHistory = [];
     let animating = false;
     let resetRequested = false;
+    let solveRequested = false;
+    let solving = false;
     let hudTimer = null;
     let currentPatternView = null;
 
     function tokenize(sequence) {
       return String(sequence).trim().split(/\s+/).filter(Boolean);
+    }
+
+    function quarterTurns(token) {
+      if (token.includes('2')) return 2;
+      return token.includes("'") ? 3 : 1;
+    }
+
+    function tokenFromTurns(base, turns) {
+      const normalized = ((turns % 4) + 4) % 4;
+      if (normalized === 0) return '';
+      if (normalized === 1) return base;
+      if (normalized === 2) return `${base}2`;
+      return `${base}'`;
+    }
+
+    function recordMove(token) {
+      const base = token[0];
+      const previous = moveHistory[moveHistory.length - 1];
+      if (previous && previous[0] === base) {
+        const combined = tokenFromTurns(base, quarterTurns(previous) + quarterTurns(token));
+        moveHistory.pop();
+        if (combined) moveHistory.push(combined);
+      } else {
+        moveHistory.push(tokenFromTurns(base, quarterTurns(token)));
+      }
+    }
+
+    function invertToken(token) {
+      if (token.includes('2')) return `${token[0]}2`;
+      return token.includes("'") ? token[0] : `${token[0]}'`;
+    }
+
+    function setSolvingUI(active) {
+      solving = active;
+      const button = $('#solveBtn');
+      button.disabled = active;
+      button.textContent = active ? 'SOLVING…' : 'SOLVE';
+      button.setAttribute('aria-busy', String(active));
+    }
+
+    function finishSolution() {
+      moveHistory.length = 0;
+      setSolvingUI(false);
+      flashHud('SOLVED');
+    }
+
+    function startSolution() {
+      solveRequested = false;
+      const solution = moveHistory.slice().reverse().map(invertToken);
+      if (!solution.length) {
+        finishSolution();
+        return;
+      }
+      setSolvingUI(true);
+      showSequence('AUTO SOLVE', solution);
+      solution.forEach((t, idx) => {
+        moveQueue.push({
+          t,
+          speed: reducedMotion ? 80 : 220,
+          pattern: true,
+          solution: true,
+          noDelay: true,
+          idx,
+          last: idx === solution.length - 1
+        });
+      });
+      pump();
+    }
+
+    function requestSolution() {
+      if (solving || solveRequested) return;
+      moveQueue.length = 0;
+      pendingPatterns.length = 0;
+      hideSequence();
+      solveRequested = true;
+      setSolvingUI(true);
+      if (!animating) startSolution();
     }
 
     function enqueueSequence(sequence, speed, extra = {}) {
@@ -1465,12 +1560,28 @@
 
         if (resetRequested) {
           resetRequested = false;
+          solveRequested = false;
+          moveHistory.length = 0;
+          setSolvingUI(false);
           buildCube();
           pump();
           return;
         }
 
-        if (item.pattern && !item.last) {
+        if (!item.solution) recordMove(token);
+
+        if (solveRequested) {
+          startSolution();
+          return;
+        }
+
+        if (item.solution && item.last) {
+          finishSolution();
+          pump();
+          return;
+        }
+
+        if (item.pattern && !item.last && !item.noDelay) {
           const pause = parseFloat($('#delaySlider').value) * 1000;
           setTimeout(pump, pause);
         } else {
@@ -1485,6 +1596,9 @@
       if (resetRequested) {
         if (!animating) {
           resetRequested = false;
+          solveRequested = false;
+          moveHistory.length = 0;
+          setSolvingUI(false);
           buildCube();
         }
         return;
@@ -1495,12 +1609,13 @@
 
     movesGrid.addEventListener('click', (e) => {
       const btn = e.target.closest('[data-move]');
-      if (!btn) return;
+      if (!btn || solving || solveRequested) return;
       moveQueue.push({t: btn.dataset.move, speed: reducedMotion ? 80 : 260});
       pump();
     });
 
     $('#scrambleBtn').addEventListener('click', () => {
+      if (solving || solveRequested) return;
       hideSequence();
       const faces = ['U', 'D', 'L', 'R', 'F', 'B'];
       const seq = [];
@@ -1514,9 +1629,14 @@
       enqueueSequence(seq.join(' '), 130);
     });
 
+    $('#solveBtn').addEventListener('click', requestSolution);
+
     $('#resetBtn').addEventListener('click', () => {
       moveQueue.length = 0;
       pendingPatterns.length = 0;
+      moveHistory.length = 0;
+      solveRequested = false;
+      setSolvingUI(false);
       hideSequence();
       resetRequested = true;
       if (!animating) {
@@ -1541,6 +1661,11 @@
 
     patternSelect.addEventListener('change', () => {
       if (patternSelect.value === '') return;
+      if (solving || solveRequested) {
+        patternSelect.value = '';
+        patternSelect.blur();
+        return;
+      }
       const item = patterns[Number(patternSelect.value)];
       pendingPatterns.push({name: item[0], sequence: tokenize(item[1])});
       document.body.classList.add('controls-hidden');
@@ -1765,7 +1890,7 @@
         else togglePanel();
         return;
       }
-      if (typing) return;
+      if (typing || solving || solveRequested) return;
       const keyName = e.key.toUpperCase();
       if (['U', 'D', 'L', 'R', 'F', 'B'].includes(keyName)) {
         e.preventDefault();
