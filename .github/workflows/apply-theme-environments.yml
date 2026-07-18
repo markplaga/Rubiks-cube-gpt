@@ -1,15 +1,17 @@
 name: Apply 25 theme environments
 
 on:
-  push:
-    paths:
-      - .github/workflows/apply-theme-environments.yml
+  workflow_dispatch:
+  issues:
+    types: [opened]
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   update:
+    if: github.event_name == 'workflow_dispatch' || github.event.issue.title == 'Apply 25 theme environments'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -39,4 +41,3 @@ jobs:
           git add index.html
           git commit -m "Publish 25 theme environments"
           git push origin gh-pages
-# trigger after workflow existed on default branch
