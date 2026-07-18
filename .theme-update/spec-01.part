@@ -1,0 +1,75 @@
+--- a/SPEC.md
++++ b/SPEC.md
+@@ -8,7 +8,7 @@
+ 
+ ## 1. Overview
+ 
+-CUBED is a full-screen, responsive Three.js Rubik’s Cube tutorial. Users can orbit and zoom, turn faces with buttons or keyboard, scramble, automatically solve, and reset, follow an eight-step beginner guide with playable algorithms, play 25 cumulative decorative patterns, adjust pattern delay and camera spin, switch among four visual environments, change all six cube colors through named palettes, hide interface panels for a clean view, and open Tech and Help overlays.
++CUBED is a full-screen, responsive Three.js Rubik’s Cube tutorial. Users can orbit and zoom, turn faces with buttons or keyboard, scramble, automatically solve, and reset, follow an eight-step beginner guide with playable algorithms, play 25 cumulative decorative patterns, adjust pattern delay and camera spin, switch among 25 visual environments from a dropdown, change all six cube colors through named palettes, hide interface panels for a clean view, and open Tech and Help overlays.
+ 
+ It must work on desktop, mobile, high-DPI devices, orientation changes, and in-app browsers.
+ 
+@@ -25,7 +25,7 @@
+ ## 3. Interface
+ 
+ - `#stage`: fixed full-screen canvas, CSS-sized at 100% width/height, `touch-action:none`, grab/grabbing cursor.
+-- Header: CUBED brand with accented B, mobile-hidden tagline, and Nebula/Synthwave/Daylight/Ember pills.
++- Header: CUBED brand with accented B, mobile-hidden tagline, and an Environment dropdown listing all 25 visual environments.
+ - Rail: GUIDE, CONTROLS, TECH, HELP; active styling must reflect state.
+ - Guide panel: desktop right-side glass card; mobile bottom sheet; smooth hide/show.
+ - Control deck:
+@@ -176,18 +176,42 @@
+ 
+ Label negative as `◂ magnitude`, positive as `magnitude ▸`, and zero as `off`. Spin continues during cube moves and playback.
+ 
+-## 9. Themes
+-
+-Nebula is default. Set `body[data-theme]`, update CSS variables, and interpolate scene parameters for about one second (about 80ms under reduced motion).
+-
+-| Theme | Background | Accent | Hemi sky/ground/int | Key color/int | Rim color/int | Amb | Stars | Grid | Shadow |
+-|---|---|---|---|---|---|---:|---:|---:|---:|
+-| Nebula | `#1B2050→#0B0D1F→#05060F` radial | `#59E3FF` | `BFD6FF/10121F/.85` | `FFFFFF/.95` | `59E3FF/.6` | .22 | .9 | 0 | .22 |
+-| Synthwave | `#0B021A→#2A0B45→#FF2E88` linear | `#FF4FA3` | `FF9AD5/1A0530/.7` | `FFD1EC/.85` | `00E5FF/.85` | .2 | .35 | .55 | .3 |
+-| Daylight | `#F4F6FA→#DDE3EE→#C3CCDD` radial | `#2456E6` | `FFFFFF/B9C2D6/1` | `FFF6E8/1.05` | `9DB7FF/.35` | .5 | 0 | 0 | .16 |
+-| Ember | `#3B1408→#1C0805→#0B0302` radial | `#FFB54D` | `FFD2A1/2A0D05/.75` | `FFBE8A/1.05` | `FF5A2B/.7` | .18 | .25 | 0 | .34 |
+-
+-Interpolate all light colors/intensities, star opacity, grid opacity, and ground-shadow opacity.
++## 9. Theme environments
++
++Nebula is the default. The header uses one `#themeSelect` Environment dropdown populated from a 25-item data structure. Every option must have a distinct name, description, layered CSS background, accent, light/dark interface mode, panel tint, and coordinated WebGL scene target.
++
++Selecting an environment sets `body[data-theme]`, updates CSS variables and the browser theme color, and interpolates scene parameters for about one second (about 80ms under reduced motion). Interpolate hemisphere, key, rim and ambient lighting; fog color/density; star color, size, speed and opacity; grid colors/opacity; and ground-shadow color/opacity.
++
++
++| # | Environment | Design intent | Mode | Accent |
++|---:|---|---|---|---|
++| 1 | Nebula | Deep indigo space with cyan starlight | Dark | `#59E3FF` |
++| 2 | Synthwave Grid | Magenta horizon, cyan rim and neon grid | Dark | `#FF4FA3` |
++| 3 | Daylight Studio | Clean gallery daylight and soft gray floor | Light | `#2456E6` |
++| 4 | Ember Forge | Smoky charcoal with glowing forge light | Dark | `#FFB54D` |
++| 5 | Aurora Sky | Emerald/violet aurora over polar night | Dark | `#79FFD2` |
++| 6 | Moonlit Ocean | Silver moonlight and layered midnight blues | Dark | `#8FD8FF` |
++| 7 | Desert Dusk | Terracotta sunset fading into violet night | Dark | `#F5B66E` |
++| 8 | Enchanted Forest | Moss, moonlit mist and woodland green | Dark | `#9BE564` |
++| 9 | Arctic Ice | Bright glacial blue and crystalline light | Light | `#13A8C7` |
++| 10 | Golden Hour | Cream studio warmed by late sun | Light | `#C86B20` |
++| 11 | Midnight Garden | Velvet plum with emerald botanical light | Dark | `#FF7AC8` |
++| 12 | Cosmic Violet | Dense violet cosmos and lavender stars | Dark | `#C7A0FF` |
++| 13 | Cyber City | Electric cyan digital grid and magenta rim | Dark | `#00F0FF` |
++| 14 | Rose Quartz | Blush mineral light and pearly softness | Light | `#B94F7C` |
++| 15 | Jade Temple | Lacquer green, jade and antique gold | Dark | `#67D6A3` |
++| 16 | Solar Flare | Yellow-orange plasma against solar red | Dark | `#FFD84D` |
++| 17 | Deep Sea | Abyssal blue with bioluminescent aqua | Dark | `#4DF4D2` |
++| 18 | Cloud Nine | Airy sky blue and soft white atmosphere | Light | `#287BC1` |
++| 19 | Volcanic Glass | Obsidian darkness with lava-red cuts | Dark | `#FF5A36` |
++| 20 | Lavender Mist | Pale lavender haze and violet studio light | Light | `#7252B8` |
++| 21 | Copper Workshop | Burnished copper, walnut and maker light | Dark | `#D98A4E` |
++| 22 | Sakura Night | Cherry-blossom pink under indigo night | Dark | `#FF8FBD` |
++| 23 | Emerald Cavern | Dark stone with crystalline emerald glow | Dark | `#39E58C` |
++| 24 | Monochrome Studio | Minimal grayscale sculptural gallery | Light | `#343A40` |
++| 25 | Prism Festival | Layered spectral light and cosmic sparkle | Dark | `#7CF7FF` |
++
++The JavaScript `themeEnvironments` array is the exact source of truth for background strings and numeric scene targets. The dropdown labels are numbered `01`–`25`; each option title carries its short environment description. No theme preference is stored, so reload returns to Nebula.
+ 
+ ## 10. Eight-step guide
+ 
