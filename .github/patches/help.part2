@@ -1,0 +1,25 @@
+-      <p>The Pattern Gallery contains 25 classic decorative patterns. A selected pattern begins from the cube’s <em>current</em> state—patterns are deliberately cumulative, and RESET is the only automatic return to solved. Selecting a pattern immediately hides the control deck for a cleaner view; use the <strong>CONTROLS</strong> rail button to reveal it again.</p>
+-      <p>If a turn, algorithm, scramble, or earlier pattern is still running, the new pattern waits until the queue is completely empty. The dropdown returns to its placeholder after every selection, so the same pattern can be chosen repeatedly. The sequence strip displays the pattern name and every token: the current token is highlighted, finished tokens remain tinted, and upcoming tokens stay muted. The strip remains visible until the next Scramble or Reset.</p>
+-      <p>The <strong>Delay</strong> slider adds a pause of 0.25–5 seconds after each pattern move except the last. It affects patterns only—not manual turns, the guide, or Scramble—and it is read live, so changing it during playback alters the remaining pauses.</p>
++      <h3>Quick start</h3>
++      <p>Drag the background to orbit the cube, use the twelve face-turn buttons to make moves, choose <strong>SCRAMBLE</strong> for a random challenge, or select a decorative pattern. At any point, press <strong>SOLVE</strong> to animate the cube back to solved. <strong>RESET</strong> immediately abandons queued work and safely rebuilds a solved cube after any turn already in motion finishes.</p>
+ 
+-      <h3>Cube color palettes</h3>
+-      <p>The Color Palette dropdown includes the standard Rubik’s scheme plus 20 alternate named palettes. A palette remaps the six color slots—white, yellow, blue, green, red, and orange—across the entire live cube. You can recolor a solved cube, a scramble, a finished pattern, or a cube in motion without changing any cubie’s position or orientation. The chosen palette remains active when RESET is used, but a full page reload returns to the standard palette.</p>
+-
+-      <h3>The eight-step beginner guide</h3>
+-      <p><strong>GUIDE</strong> opens the beginner-solving panel. The header shows the current step and eight progress ticks. Use <strong>Back</strong> and <strong>Next</strong> to move through the lessons; on step eight, <strong>Start over</strong> returns to step one. Every notation block has a <strong>▶ Play</strong> button that queues that exact algorithm on the cube from its current state. The panel’s ✕ or the GUIDE rail button hides the guide without changing your cube or lesson position.</p>
++      <h3>Orbit, zoom, and automatic spin</h3>
++      <ul class="help-compact">
++        <li><strong>Orbit:</strong> drag anywhere on the cube stage with a mouse, pen, or one finger.</li>
++        <li><strong>Zoom:</strong> use the mouse wheel or pinch with two fingers. Zoom is limited so the cube cannot disappear into or away from the camera.</li>
++        <li><strong>Spin slider:</strong> values from <code>-1</code> to <code>+1</code> continuously orbit the camera. Negative rotates counter-clockwise, positive rotates clockwise, and <code>0</code> displays <strong>off</strong>.</li>
++        <li>Automatic spin pauses while you drag and continues during moves, scrambles, guide algorithms, patterns, and automatic solving.</li>
++      </ul>
++
++      <h3>Face-turn buttons and Rubik’s notation</h3>
++      <p>The twelve buttons perform clockwise and counter-clockwise turns of the six faces: <code>U D L R F B</code>. Read a plain letter as clockwise while looking directly at that face. A prime mark (<code>'</code>) means counter-clockwise, and <code>2</code> means one smooth 180-degree half turn.</p>
++      <p>The move engine also understands middle slices <code>M E S</code> and whole-cube rotations <code>x y z</code>. These additional moves can appear in guide algorithms, patterns, and the automatic solution even though they do not have separate deck buttons.</p>
++
++      <h3>Keyboard, move queue, and HUD</h3>
++      <ul class="help-compact">
