@@ -12,14 +12,15 @@
   </style>
 </head>
 <body>
-<main><div><div class="mark">CU<b>B</b>ED</div><div id="status" class="status">Opening the 25 environments…</div><button id="retry" class="retry" type="button">TRY AGAIN</button></div></main>
+<main><div><div class="mark">CU<b>B</b>ED</div><div id="status" class="status">Opening the cube and 25 environments…</div><button id="retry" class="retry" type="button">TRY AGAIN</button></div></main>
 <script>
 (() => {
   'use strict';
-  const version = 'environment-build-20260718-5';
+  const version = 'environment-runtime-20260718-7';
   const status = document.getElementById('status');
   const retry = document.getElementById('retry');
-  const patchFiles = Array.from({length: 7}, (_, i) => `theme-patches/index-0${i + 1}.part`);
+  const environmentPatches = Array.from({length: 7}, (_, i) => `theme-patches/index-0${i + 1}.part`);
+  const runtimeFix = 'theme-patches/environment-runtime-v7.patch';
 
   function applyUnifiedPatch(source, patchText) {
     const sourceLines = source.replace(/\r\n/g, '\n').split('\n');
@@ -70,21 +71,23 @@
 
   async function boot() {
     retry.style.display = 'none';
-    status.textContent = 'Opening the 25 environments…';
+    status.textContent = 'Opening the cube and 25 environments…';
     try {
-      const result = await Promise.all([
+      const [legacy, environmentParts, fixPatch] = await Promise.all([
         fetchText('legacy.html'),
-        Promise.all(patchFiles.map(fetchText))
+        Promise.all(environmentPatches.map(fetchText)),
+        fetchText(runtimeFix)
       ]);
-      const completed = applyUnifiedPatch(result[0], result[1].join(''));
+      const environmentBuild = applyUnifiedPatch(legacy, environmentParts.join(''));
+      const completed = applyUnifiedPatch(environmentBuild, fixPatch);
       const environmentCount = (completed.match(/id: '[^']+', name:/g) || []).length;
-      if (!completed.includes('id="themeSelect"') || !completed.includes('Prism Festival') || environmentCount !== 25) {
-        throw new Error(`Environment verification failed (${environmentCount}/25 found)`);
+      if (environmentCount !== 25 || !completed.includes('id="themeSelect"') || !completed.includes('id="environmentBackdrop"') || !completed.includes('Prism Festival')) {
+        throw new Error(`Build verification failed (${environmentCount}/25 environments)`);
       }
       openApplication(completed);
     } catch (error) {
-      console.error('CUBED environment startup failed', error);
-      status.textContent = `The 25 environments could not start: ${error.message}. Tap TRY AGAIN after a moment.`;
+      console.error('CUBED startup failed', error);
+      status.textContent = `CUBED could not start: ${error.message}. Tap TRY AGAIN after a moment.`;
       retry.style.display = 'inline-block';
     }
   }
