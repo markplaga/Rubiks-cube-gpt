@@ -1,0 +1,65 @@
+         start: performance.now(),
+-        duration: reducedMotion ? 80 : 1000,
++        duration: immediate ? 1 : (reducedMotion ? 80 : 1000),
+         from: {
+           hemiSky: hemi.color.clone(),
+           hemiGround: hemi.groundColor.clone(),
+@@ -1886,14 +2053,25 @@
+           rimInt: rim.intensity,
+           amb: ambient.intensity,
+           stars: starMaterial.opacity,
++          starColor: starMaterial.color.clone(),
++          starSize: starMaterial.size,
++          starSpeed: currentStarSpeed,
+           grid: getGridOpacity(),
+-          shadow: groundMaterial.opacity
++          grid1: gridMaterials[0].color.clone(),
++          grid2: (gridMaterials[1] || gridMaterials[0]).color.clone(),
++          shadow: groundMaterial.opacity,
++          shadowColor: groundMaterial.color.clone(),
++          fogColor: scene.fog.color.clone(),
++          fogDensity: scene.fog.density
+         },
+-        to: themeTargets[name]
++        to: target
+       };
+     }
+ 
+-    $$('.theme-btn').forEach(btn => btn.addEventListener('click', () => setTheme(btn.dataset.theme)));
++    themeSelect.addEventListener('change', () => {
++      setTheme(themeSelect.value);
++      themeSelect.blur();
++    });
+ 
+     function updateThemeTween(now) {
+       if (!themeTween) return;
+@@ -1910,8 +2088,16 @@
+       rim.intensity = THREE.MathUtils.lerp(f.rimInt, t.rimInt, e);
+       ambient.intensity = THREE.MathUtils.lerp(f.amb, t.amb, e);
+       starMaterial.opacity = THREE.MathUtils.lerp(f.stars, t.stars, e);
++      starMaterial.color.copy(f.starColor).lerp(new THREE.Color(t.starColor), e);
++      starMaterial.size = THREE.MathUtils.lerp(f.starSize, t.starSize, e);
++      currentStarSpeed = THREE.MathUtils.lerp(f.starSpeed, t.starSpeed, e);
+       setGridOpacity(THREE.MathUtils.lerp(f.grid, t.grid, e));
++      gridMaterials[0].color.copy(f.grid1).lerp(new THREE.Color(t.grid1), e);
++      (gridMaterials[1] || gridMaterials[0]).color.copy(f.grid2).lerp(new THREE.Color(t.grid2), e);
+       groundMaterial.opacity = THREE.MathUtils.lerp(f.shadow, t.shadow, e);
++      groundMaterial.color.copy(f.shadowColor).lerp(new THREE.Color(t.shadowColor), e);
++      scene.fog.color.copy(f.fogColor).lerp(new THREE.Color(t.fogColor), e);
++      scene.fog.density = THREE.MathUtils.lerp(f.fogDensity, t.fogDensity, e);
+       if (p >= 1) themeTween = null;
+     }
+ 
+@@ -2022,10 +2208,11 @@
+       );
+       camera.lookAt(0, 0, 0);
+ 
+-      stars.rotation.y += dt * 0.008;
++      stars.rotation.y += dt * currentStarSpeed;
+       updateThemeTween(now);
+       renderer.render(scene, camera);
+     }
++    setTheme('nebula', true);
+     resizeRendererToDisplaySize();
+     requestAnimationFrame(render);
+   })();
