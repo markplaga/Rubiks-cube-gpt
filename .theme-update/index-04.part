@@ -1,0 +1,48 @@
++        background: 'radial-gradient(circle at 72% 10%, rgba(220,240,255,.36) 0%, transparent 20%), linear-gradient(180deg, #0b2042 0%, #07172d 48%, #04101d 100%), repeating-linear-gradient(175deg, transparent 0 22px, rgba(96,178,220,.05) 23px 25px)',
++        scene: {hemiSky:0xc8e8ff,hemiGround:0x061321,hemiInt:.72,keyColor:0xdff3ff,keyInt:.88,rimColor:0x4ea7d8,rimInt:.65,amb:.2,stars:.38,starColor:0xd9efff,starSize:.075,starSpeed:.004,grid:.07,grid1:0x4ea7d8,grid2:0x173a5c,shadow:.28,shadowColor:0x00101c,fogColor:0x07192b,fogDensity:.0045}
++      },
++      {
++        id: 'desert-dusk', name: 'Desert Dusk', description: 'Terracotta sunset fading into a violet desert night.',
++        accent: '#f5b66e', surface: '#2a1220', light: false,
++        background: 'radial-gradient(circle at 18% 22%, rgba(255,190,112,.50) 0%, transparent 34%), linear-gradient(150deg, #8b3a3a 0%, #4e2449 48%, #17162c 100%)',
++        scene: {hemiSky:0xffc38e,hemiGround:0x251323,hemiInt:.78,keyColor:0xffd0a5,keyInt:.95,rimColor:0xb68cff,rimInt:.5,amb:.22,stars:.3,starColor:0xffe2bd,starSize:.07,starSpeed:.005,grid:0,grid1:0xf5b66e,grid2:0x5b2a3c,shadow:.3,shadowColor:0x250d10,fogColor:0x2b1728,fogDensity:.003}
++      },
++      {
++        id: 'enchanted-forest', name: 'Enchanted Forest', description: 'Mossy greens, moonlit mist, and quiet woodland magic.',
++        accent: '#9be564', surface: '#071a12', light: false,
++        background: 'radial-gradient(circle at 24% 16%, rgba(158,229,100,.24) 0%, transparent 34%), radial-gradient(circle at 80% 78%, rgba(42,125,92,.30) 0%, transparent 40%), linear-gradient(155deg, #143923 0%, #0a2118 52%, #04110d 100%)',
++        scene: {hemiSky:0xbfe8c8,hemiGround:0x08150e,hemiInt:.72,keyColor:0xd9f4c9,keyInt:.84,rimColor:0x57c7a0,rimInt:.55,amb:.2,stars:.2,starColor:0xdfffd3,starSize:.07,starSpeed:.003,grid:0,grid1:0x72c47c,grid2:0x234f35,shadow:.32,shadowColor:0x031108,fogColor:0x0a2418,fogDensity:.006}
++      },
++      {
++        id: 'arctic-ice', name: 'Arctic Ice', description: 'Bright glacial blue with crystalline polar light.',
++        accent: '#13a8c7', surface: '#edfaff', light: true,
++        background: 'radial-gradient(circle at 18% 12%, rgba(255,255,255,.98) 0%, transparent 38%), radial-gradient(circle at 80% 72%, rgba(101,217,240,.30) 0%, transparent 42%), linear-gradient(145deg, #f7fdff 0%, #d6f3fb 58%, #a9dce8 100%)',
++        scene: {hemiSky:0xffffff,hemiGround:0xb7dce5,hemiInt:1.02,keyColor:0xffffff,keyInt:1.08,rimColor:0x62d7ee,rimInt:.45,amb:.48,stars:.12,starColor:0xffffff,starSize:.06,starSpeed:.002,grid:.05,grid1:0x58c9df,grid2:0xb3e7f0,shadow:.13,shadowColor:0x386a78,fogColor:0xeafaff,fogDensity:.0015}
++      },
++      {
++        id: 'golden-hour', name: 'Golden Hour', description: 'Soft cream studio warmed by late-afternoon sunlight.',
++        accent: '#c86b20', surface: '#fff6e8', light: true,
++        background: 'radial-gradient(circle at 20% 12%, rgba(255,255,240,.95) 0%, transparent 40%), radial-gradient(circle at 82% 68%, rgba(255,169,79,.34) 0%, transparent 42%), linear-gradient(145deg, #fff8e9 0%, #f7d7ad 58%, #dca875 100%)',
++        scene: {hemiSky:0xfff7df,hemiGround:0xc9a77f,hemiInt:.98,keyColor:0xffd29a,keyInt:1.15,rimColor:0xff8f4b,rimInt:.38,amb:.42,stars:0,starColor:0xffffff,starSize:.06,starSpeed:.002,grid:0,grid1:0xd9954f,grid2:0xf2cf9d,shadow:.18,shadowColor:0x72513a,fogColor:0xf7dfbd,fogDensity:.001}
++      },
++      {
++        id: 'midnight-garden', name: 'Midnight Garden', description: 'Velvet plum night with botanical emerald highlights.',
++        accent: '#ff7ac8', surface: '#1b0d21', light: false,
++        background: 'radial-gradient(circle at 16% 18%, rgba(255,122,200,.24) 0%, transparent 34%), radial-gradient(circle at 82% 76%, rgba(63,180,125,.24) 0%, transparent 40%), linear-gradient(150deg, #321438 0%, #171222 52%, #080b12 100%)',
++        scene: {hemiSky:0xe2b8dc,hemiGround:0x0d1111,hemiInt:.68,keyColor:0xffd8ed,keyInt:.82,rimColor:0x51d49b,rimInt:.62,amb:.2,stars:.28,starColor:0xffd9ef,starSize:.075,starSpeed:.004,grid:0,grid1:0xff7ac8,grid2:0x2e7559,shadow:.31,shadowColor:0x100513,fogColor:0x160d1c,fogDensity:.0045}
++      },
++      {
++        id: 'cosmic-violet', name: 'Cosmic Violet', description: 'Dense violet cosmos with luminous lavender starlight.',
++        accent: '#c7a0ff', surface: '#130a2a', light: false,
++        background: 'radial-gradient(circle at 28% 20%, rgba(150,82,255,.52) 0%, transparent 38%), radial-gradient(circle at 76% 74%, rgba(255,73,198,.24) 0%, transparent 38%), linear-gradient(145deg, #2a0b58 0%, #120829 56%, #06030f 100%)',
++        scene: {hemiSky:0xd6c1ff,hemiGround:0x100822,hemiInt:.76,keyColor:0xeee4ff,keyInt:.9,rimColor:0xff59cf,rimInt:.68,amb:.2,stars:.96,starColor:0xe9dcff,starSize:.105,starSpeed:.01,grid:0,grid1:0xbb79ff,grid2:0x5b2aa0,shadow:.26,shadowColor:0x090015,fogColor:0x100722,fogDensity:.0028}
++      },
++      {
++        id: 'cyber-city', name: 'Cyber City', description: 'Electric cyan city glow with a precise digital grid.',
++        accent: '#00f0ff', surface: '#04171a', light: false,
++        background: 'linear-gradient(90deg, rgba(0,240,255,.06) 1px, transparent 1px), linear-gradient(rgba(0,240,255,.05) 1px, transparent 1px), radial-gradient(circle at 50% 110%, rgba(0,240,255,.30) 0%, transparent 44%), linear-gradient(150deg, #071b22 0%, #041014 58%, #020608 100%)',
++        scene: {hemiSky:0x8ff9ff,hemiGround:0x031013,hemiInt:.7,keyColor:0xd8feff,keyInt:.9,rimColor:0xff3fb4,rimInt:.82,amb:.18,stars:.22,starColor:0x7dffff,starSize:.055,starSpeed:.014,grid:.62,grid1:0x00f0ff,grid2:0x164b60,shadow:.35,shadowColor:0x001014,fogColor:0x021014,fogDensity:.004}
++      },
++      {
++        id: 'rose-quartz', name: 'Rose Quartz', description: 'Blush mineral light with pearly, translucent softness.',
++        accent: '#b94f7c', surface: '#fff1f5', light: true,
