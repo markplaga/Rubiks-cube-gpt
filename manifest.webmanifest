@@ -1,0 +1,19 @@
+{
+  "name": "CUBED",
+  "short_name": "CUBED",
+  "description": "A 3D Rubik's cube with 25 environments to explore and solve.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#070918",
+  "theme_color": "#0b0d1f",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
