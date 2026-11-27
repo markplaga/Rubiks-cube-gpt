@@ -1,7 +1,7 @@
-// CUBED service worker v1 — same-origin app shell only.
+// CUBED service worker v2 — same-origin app shell only.
 // The loader fetches legacy.html and theme-patches with a version query;
 // those are cached by full URL on first use and refreshed on network fetch.
-const CACHE_NAME = 'cubed-v1';
+const CACHE_NAME = 'cubed-v2';
 const CORE_FILES = [
   './',
   'index.html',
